@@ -3,7 +3,6 @@ package main
 import (
 	"bufio"
 	"os"
-	"strconv"
 	"strings"
 )
 
@@ -21,16 +20,6 @@ read_loop:
 	}
 
 	return lines
-}
-
-func StringsToInts(stringInputs []string) []int {
-	ints := []int{}
-	for _, str := range stringInputs {
-		i, _ := strconv.Atoi(str)
-		ints = append(ints, i)
-	}
-
-	return ints
 }
 
 func main() {
