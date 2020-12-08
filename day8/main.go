@@ -88,15 +88,14 @@ func main() {
 
 	fmt.Println("Part 2")
 	for idx, line := range in {
-		instructionAndValueStr := strings.Split(line, " ")
-		instruction, valueStr := instructionAndValueStr[0], instructionAndValueStr[1]
 		newProgram := make([]string, len(in))
-		if instruction == NOP {
+		if strings.Contains(line, NOP) {
 			copy(newProgram, in)
-			newProgram[idx] = fmt.Sprintf("%v %v", JMP, valueStr)
-		} else if instruction == JMP {
+			newProgram[idx] = strings.Replace(line, NOP, JMP, 1)
+		}
+		if strings.Contains(line, JMP) {
 			copy(newProgram, in)
-			newProgram[idx] = fmt.Sprintf("%v %v", NOP, valueStr)
+			newProgram[idx] = strings.Replace(line, JMP, NOP, 1)
 		}
 		if newProgram[0] != "" {
 			part2Accumulator, success := RunDaRiddem(newProgram)
@@ -105,7 +104,5 @@ func main() {
 				break
 			}
 		}
-
 	}
-
 }
