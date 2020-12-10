@@ -25,7 +25,8 @@ func main() {
 	diffOf3 := 1 // the device one
 	currentJolts := 0
 	for _, i := range ints {
-		// part 1 stuff
+		allNodes = append(allNodes, &Node{value: i, prev: []*Node{}})
+
 		diff := i - currentJolts
 		if diff == 1 {
 			diffOf1++
@@ -34,8 +35,6 @@ func main() {
 		}
 		currentJolts += diff
 
-		// part 2 stuff
-		allNodes = append(allNodes, &Node{value: i, prev: []*Node{}})
 	}
 	fmt.Println(diffOf1 * diffOf3)
 
@@ -47,8 +46,7 @@ func main() {
 			}
 		}
 	}
-	cachedPaths := map[*Node]int{}
-	fmt.Println(FindPaths(allNodes[len(allNodes)-1], startNode, cachedPaths))
+	fmt.Println(FindPaths(allNodes[len(allNodes)-1], startNode, map[*Node]int{}))
 }
 
 // oops, this is O(N!) without cacheing and we have N=102
@@ -82,7 +80,6 @@ read_loop:
 		}
 		lines = append(lines, strings.TrimSpace(text))
 	}
-
 	return lines
 }
 
@@ -92,6 +89,5 @@ func StringsToInts(stringInputs []string) []int {
 		i, _ := strconv.Atoi(str)
 		ints = append(ints, i)
 	}
-
 	return ints
 }
