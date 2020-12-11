@@ -2,7 +2,11 @@ package main
 
 import (
 	"fmt"
+	"image"
+	"image/color"
+	"image/gif"
 	"io/ioutil"
+	"os"
 	"strings"
 )
 
@@ -89,6 +93,9 @@ func main() {
 			break
 		}
 	}
+
+	generateGif(iterationsPart1, "part1.gif")
+	generateGif(iterationsPart2, "part2.gif")
 }
 
 func countAdjacentOccupied(seatPlan []string, colIdx, rowIdx int) int {
@@ -139,4 +146,52 @@ func countTotalOccupied(rows []string) (count int) {
 		count += strings.Count(row, string(OCCUPIED))
 	}
 	return
+}
+
+// Extra
+func generateGif(iterations [][]string, fileName string) error {
+	subImages := []*image.Paletted{}
+	delay := []int{}
+
+	for iterationN, iteration := range iterations {
+		if iterationN%2 == 1 {
+			continue
+		}
+		upLeft := image.Point{0, 0}
+		lowRight := image.Point{len(iteration[0]), len(iteration)}
+
+		freeSeatTeal := color.RGBA{R: 63, G: 191, B: 191, A: 1}
+		floor := color.RGBA{R: 214, G: 214, B: 214, A: 1}
+		occupiedBlack := color.Black
+
+		image := image.NewPaletted(image.Rectangle{upLeft, lowRight}, []color.Color{freeSeatTeal, floor, occupiedBlack})
+
+		for colIdx, row := range iteration {
+			for rowIdx, character := range row {
+				if character == EMPTY {
+					image.Set(rowIdx, colIdx, freeSeatTeal)
+				} else if character == OCCUPIED {
+					image.Set(rowIdx, colIdx, occupiedBlack)
+				} else {
+					image.Set(rowIdx, colIdx, floor)
+				}
+			}
+		}
+		subImages = append(subImages, image)
+		delay = append(delay, 20)
+	}
+	delay[len(delay)-1] = 300
+
+	g := &gif.GIF{
+		Image:     subImages,
+		Delay:     delay,
+		LoopCount: 5,
+	}
+
+	f, err := os.Create(fileName)
+	if err != nil {
+		return err
+	}
+
+	return gif.EncodeAll(f, g)
 }
