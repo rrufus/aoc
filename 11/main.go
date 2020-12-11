@@ -153,31 +153,40 @@ func generateGif(iterations [][]string, fileName string) error {
 	subImages := []*image.Paletted{}
 	delay := []int{}
 
+	scale := 5
+
 	for iterationN, iteration := range iterations {
 		if iterationN%2 == 1 {
 			continue
 		}
 		upLeft := image.Point{0, 0}
-		lowRight := image.Point{len(iteration[0]), len(iteration)}
+		lowRight := image.Point{scale * len(iteration[0]), scale * len(iteration)}
 
 		freeSeatTeal := color.RGBA{R: 63, G: 191, B: 191, A: 1}
 		floor := color.RGBA{R: 214, G: 214, B: 214, A: 1}
-		occupiedBlack := color.Black
+		occupiedBlack := color.RGBA{R: 0, G: 0, B: 0, A: 1}
 
-		image := image.NewPaletted(image.Rectangle{upLeft, lowRight}, []color.Color{freeSeatTeal, floor, occupiedBlack})
+		newImage := image.NewPaletted(image.Rectangle{upLeft, lowRight}, []color.Color{freeSeatTeal, floor, occupiedBlack})
 
 		for colIdx, row := range iteration {
 			for rowIdx, character := range row {
+				color := floor
 				if character == EMPTY {
-					image.Set(rowIdx, colIdx, freeSeatTeal)
+					color = freeSeatTeal
+
 				} else if character == OCCUPIED {
-					image.Set(rowIdx, colIdx, occupiedBlack)
-				} else {
-					image.Set(rowIdx, colIdx, floor)
+					color = occupiedBlack
+				}
+
+				topLeft := image.Point{X: rowIdx * scale, Y: colIdx * scale}
+				for x := topLeft.X; x < topLeft.X+4; x++ {
+					for y := topLeft.Y; y < topLeft.Y+4; y++ {
+						newImage.Set(x, y, color)
+					}
 				}
 			}
 		}
-		subImages = append(subImages, image)
+		subImages = append(subImages, newImage)
 		delay = append(delay, 20)
 	}
 	delay[len(delay)-1] = 300
