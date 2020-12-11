@@ -10,7 +10,19 @@ import (
 const (
 	EMPTY    = 'L'
 	OCCUPIED = '#'
-	FLOOR    = '.'
+)
+
+var (
+	vectors = [][]int{
+		{-1, -1},
+		{-1, 0},
+		{-1, 1},
+		{0, -1},
+		{0, 1},
+		{1, -1},
+		{1, 0},
+		{1, 1},
+	}
 )
 
 func ReadFromStdIn() []string {
@@ -88,25 +100,15 @@ func main() {
 			fmt.Println(countTotalOccupied(nextIteration))
 			break
 		}
-
 	}
 }
 
 func countAdjacentOccupied(seatPlan []string, colIdx, rowIdx int) int {
-	coords := [][]int{
-		{colIdx - 1, rowIdx - 1},
-		{colIdx - 1, rowIdx},
-		{colIdx - 1, rowIdx + 1},
-		{colIdx, rowIdx - 1},
-		{colIdx, rowIdx + 1},
-		{colIdx + 1, rowIdx - 1},
-		{colIdx + 1, rowIdx},
-		{colIdx + 1, rowIdx + 1}}
-
 	occupied := 0
 
-	for _, coord := range coords {
-		col, row := coord[0], coord[1]
+	for _, vector := range vectors {
+		dy, dx := vector[0], vector[1]
+		col, row := colIdx+dy, rowIdx+dx
 		if col < 0 || row < 0 || col >= len(seatPlan) || row >= len(seatPlan[0]) {
 			continue
 		}
@@ -119,16 +121,6 @@ func countAdjacentOccupied(seatPlan []string, colIdx, rowIdx int) int {
 }
 
 func countVisibleOccupied(seatPlan []string, colIdx, rowIdx int) int {
-	vectors := [][]int{
-		{-1, -1},
-		{-1, 0},
-		{-1, 1},
-		{0, -1},
-		{0, 1},
-		{1, -1},
-		{1, 0},
-		{1, 1},
-	}
 	visible := 0
 
 	// think about caching result, ie from this coordinate, we already calculated that this is visible.
