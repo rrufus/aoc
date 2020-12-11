@@ -1,9 +1,8 @@
 package main
 
 import (
-	"bufio"
 	"fmt"
-	"os"
+	"io/ioutil"
 	"sort"
 	"strconv"
 	"strings"
@@ -14,8 +13,13 @@ type Node struct {
 	prev  []*Node
 }
 
+func ReadFromInput() []string {
+	bytes, _ := ioutil.ReadFile("input")
+	return strings.Split(strings.TrimSpace(string(bytes)), "\n")
+}
+
 func main() {
-	ints := StringsToInts(ReadFromStdIn())
+	ints := StringsToInts(ReadFromInput())
 
 	startNode := &Node{value: 0, prev: []*Node{}}
 	allNodes := []*Node{startNode}
@@ -66,21 +70,6 @@ func FindPaths(node, goal *Node, cache map[*Node]int) int {
 		}
 	}
 	return paths
-}
-
-func ReadFromStdIn() []string {
-	lines := []string{}
-	reader := bufio.NewReader(os.Stdin)
-
-read_loop:
-	for {
-		text, _ := reader.ReadString('\n')
-		if text == "\n" {
-			break read_loop
-		}
-		lines = append(lines, strings.TrimSpace(text))
-	}
-	return lines
 }
 
 func StringsToInts(stringInputs []string) []int {

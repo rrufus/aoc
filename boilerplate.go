@@ -2,9 +2,17 @@ package main
 
 import (
 	"bufio"
+	"io/ioutil"
 	"os"
+	"strconv"
 	"strings"
 )
+
+func main() {
+	// in := ReadFromInput()
+	in := ReadFromStdIn()
+
+}
 
 func ReadFromStdIn() []string {
 	lines := []string{}
@@ -22,7 +30,16 @@ read_loop:
 	return lines
 }
 
-func main() {
-	in := ReadFromStdIn()
+func StringsToInts(stringInputs []string) []int {
+	ints := []int{}
+	for _, str := range stringInputs {
+		i, _ := strconv.Atoi(str)
+		ints = append(ints, i)
+	}
+	return ints
+}
 
+func ReadFromInput() []string {
+	bytes, _ := ioutil.ReadFile("input")
+	return strings.Split(strings.TrimSpace(string(bytes)), "\n")
 }
