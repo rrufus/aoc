@@ -8,3 +8,7 @@ mkdir -p $YEAR/$DAY
 cp -n boilerplate.go $YEAR/$DAY/main.go
 open http://adventofcode.com/${YEAR}/day/${DAY}
 wget --header "Cookie: session=$SESSION" -O $YEAR/$DAY/input http://adventofcode.com/${YEAR}/day/${DAY}/input
+
+cd $YEAR/$DAY
+
+exec zsh

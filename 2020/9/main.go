@@ -1,29 +1,17 @@
 package main
 
 import (
-	"bufio"
 	"fmt"
-	"os"
+	"io/ioutil"
 	"strconv"
 	"strings"
 )
 
 const PREAMBLE_LENGTH = 25
 
-func ReadFromStdIn() []string {
-	lines := []string{}
-	reader := bufio.NewReader(os.Stdin)
-
-read_loop:
-	for {
-		text, _ := reader.ReadString('\n')
-		if text == "\n" {
-			break read_loop
-		}
-		lines = append(lines, strings.TrimSpace(text))
-	}
-
-	return lines
+func ReadFromInput() []string {
+	bytes, _ := ioutil.ReadFile("input")
+	return strings.Split(strings.TrimSpace(string(bytes)), "\n")
 }
 
 func StringsToInts(stringInputs []string) []int {
@@ -37,7 +25,7 @@ func StringsToInts(stringInputs []string) []int {
 }
 
 func main() {
-	ints := StringsToInts(ReadFromStdIn())
+	ints := StringsToInts(ReadFromInput())
 
 	fmt.Println("Part 1")
 	cursor := PREAMBLE_LENGTH

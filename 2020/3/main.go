@@ -1,26 +1,14 @@
 package main
 
 import (
-	"bufio"
 	"fmt"
-	"os"
+	"io/ioutil"
 	"strings"
 )
 
-func ReadFromStdIn() []string {
-	lines := []string{}
-	reader := bufio.NewReader(os.Stdin)
-
-read_loop:
-	for {
-		text, _ := reader.ReadString('\n')
-		if text == "\n" {
-			break read_loop
-		}
-		lines = append(lines, strings.TrimSpace(text))
-	}
-
-	return lines
+func ReadFromInput() []string {
+	bytes, _ := ioutil.ReadFile("input")
+	return strings.Split(strings.TrimSpace(string(bytes)), "\n")
 }
 
 func CalculateTrees(lines []string, right int, down int) int {
@@ -43,7 +31,7 @@ func CalculateTrees(lines []string, right int, down int) int {
 }
 
 func main() {
-	in := ReadFromStdIn()
+	in := ReadFromInput()
 
 	fmt.Println("Part 1")
 	horizontal := 0

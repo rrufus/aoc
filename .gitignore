@@ -7,6 +7,6 @@
 # Unignore all dirs
 !*/
 
-!*/input
+!*/*/input
 !day
 .env

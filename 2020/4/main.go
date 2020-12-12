@@ -1,28 +1,16 @@
 package main
 
 import (
-	"bufio"
 	"fmt"
-	"os"
+	"io/ioutil"
 	"regexp"
 	"strconv"
 	"strings"
 )
 
-func ReadFromStdIn() []string {
-	lines := []string{}
-	reader := bufio.NewReader(os.Stdin)
-
-read_loop:
-	for {
-		text, _ := reader.ReadString('\n')
-		if text == "go\n" {
-			break read_loop
-		}
-		lines = append(lines, strings.TrimSpace(text))
-	}
-
-	return lines
+func ReadFromInput() []string {
+	bytes, _ := ioutil.ReadFile("input")
+	return strings.Split(string(bytes), "\n")
 }
 
 type PassportPart1 struct {
@@ -48,7 +36,7 @@ type PassportPart2 struct {
 }
 
 func main() {
-	in := ReadFromStdIn()
+	in := ReadFromInput()
 
 	fmt.Println("Part 1")
 	passportsPart1 := []*PassportPart1{{}}

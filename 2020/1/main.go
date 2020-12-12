@@ -1,27 +1,15 @@
 package main
 
 import (
-	"bufio"
 	"fmt"
-	"os"
+	"io/ioutil"
 	"strconv"
 	"strings"
 )
 
-func ReadFromStdIn() []string {
-	lines := []string{}
-	reader := bufio.NewReader(os.Stdin)
-
-read_loop:
-	for {
-		text, _ := reader.ReadString('\n')
-		if text == "\n" {
-			break read_loop
-		}
-		lines = append(lines, strings.TrimSpace(text))
-	}
-
-	return lines
+func ReadFromInput() []string {
+	bytes, _ := ioutil.ReadFile("input")
+	return strings.Split(strings.TrimSpace(string(bytes)), "\n")
 }
 
 func StringsToInts(stringInputs []string) []int {
@@ -35,9 +23,7 @@ func StringsToInts(stringInputs []string) []int {
 }
 
 func main() {
-	in := ReadFromStdIn()
-
-	ints := StringsToInts(in)
+	ints := StringsToInts(ReadFromInput())
 
 	fmt.Println("1")
 loop_1:
