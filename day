@@ -6,4 +6,5 @@ SESSION=$(grep SESSION .env | cut -d '=' -f2)
 
 mkdir -p $DAY
 cp -n boilerplate.go $DAY/main.go
+open http://adventofcode.com/${YEAR}/day/${DAY}
 wget --header "Cookie: session=$SESSION" -O $DAY/input http://adventofcode.com/${YEAR}/day/${DAY}/input

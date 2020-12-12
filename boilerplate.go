@@ -2,6 +2,7 @@ package main
 
 import (
 	"bufio"
+	"fmt"
 	"io/ioutil"
 	"os"
 	"strconv"
@@ -11,6 +12,10 @@ import (
 func main() {
 	// in := ReadFromInput()
 	in := ReadFromStdIn()
+
+	fmt.Println("Part 1")
+
+	fmt.Println("Part 2")
 
 }
 
