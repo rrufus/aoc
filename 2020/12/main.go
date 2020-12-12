@@ -42,10 +42,8 @@ func CalculateFinalManhattanDistance(instructions []string, heading image.Point,
 		case 'R':
 			heading = RotateCoord(heading, action, amount/90)
 		case 'F':
-			shipCoord = image.Point{
-				X: shipCoord.X + heading.X*amount,
-				Y: shipCoord.Y + heading.Y*amount,
-			}
+			shipCoord.X += heading.X * amount
+			shipCoord.Y += heading.Y * amount
 		}
 	}
 	return int(math.Abs(float64(shipCoord.X)) + math.Abs(float64(shipCoord.Y)))
@@ -57,8 +55,8 @@ func RotateCoord(in image.Point, direction rune, times int) image.Point {
 
 	for i := 0; i < times; i++ {
 		newPosition = image.Point{
-			X: -rotateDirection[direction] * newPosition.Y,
-			Y: rotateDirection[direction] * newPosition.X,
+			X: rotateDirection[direction] * newPosition.Y,
+			Y: -rotateDirection[direction] * newPosition.X,
 		}
 	}
 	return newPosition
