@@ -11,18 +11,6 @@ import (
 
 type Army int
 
-type Group struct {
-	Allegiance Army
-	Number     int
-	Units      int
-	Health     int
-	Damage     int
-	DamageType string
-	Initiative int
-	WeakTo     []string
-	ImmuneTo   []string
-}
-
 const (
 	ImmuneSystem = Army(iota)
 	Infection
@@ -38,6 +26,37 @@ var (
 	print      = false
 	ArmyToName = map[Army]string{ImmuneSystem: "Immune System", Infection: "Infection"}
 )
+
+type Group struct {
+	Allegiance Army
+	Number     int
+	Units      int
+	Health     int
+	Damage     int
+	DamageType string
+	Initiative int
+	WeakTo     []string
+	ImmuneTo   []string
+}
+
+type ByMoveOrder []*Group
+
+func (a ByMoveOrder) Len() int { return len(a) }
+func (a ByMoveOrder) Less(i, j int) bool {
+	groupIEffectivePower := a[i].EffectivePower()
+	groupJEffectivePower := a[j].EffectivePower()
+	if groupIEffectivePower == groupJEffectivePower {
+		return a[i].Initiative > a[j].Initiative
+	}
+	return groupIEffectivePower > groupJEffectivePower
+}
+func (a ByMoveOrder) Swap(i, j int) { a[i], a[j] = a[j], a[i] }
+
+type ByInitiative []*Group
+
+func (a ByInitiative) Len() int           { return len(a) }
+func (a ByInitiative) Less(i, j int) bool { return a[i].Initiative > a[j].Initiative }
+func (a ByInitiative) Swap(i, j int)      { a[i], a[j] = a[j], a[i] }
 
 func (g *Group) EffectivePower() int {
 	return g.Units * g.Damage
@@ -85,25 +104,6 @@ func (g *Group) EstimateDamage(enemy *Group, print bool) int {
 	}
 	return damage
 }
-
-type ByMoveOrder []*Group
-
-func (a ByMoveOrder) Len() int { return len(a) }
-func (a ByMoveOrder) Less(i, j int) bool {
-	groupIEffectivePower := a[i].EffectivePower()
-	groupJEffectivePower := a[j].EffectivePower()
-	if groupIEffectivePower == groupJEffectivePower {
-		return a[i].Initiative > a[j].Initiative
-	}
-	return groupIEffectivePower > groupJEffectivePower
-}
-func (a ByMoveOrder) Swap(i, j int) { a[i], a[j] = a[j], a[i] }
-
-type ByInitiative []*Group
-
-func (a ByInitiative) Len() int           { return len(a) }
-func (a ByInitiative) Less(i, j int) bool { return a[i].Initiative > a[j].Initiative }
-func (a ByInitiative) Swap(i, j int)      { a[i], a[j] = a[j], a[i] }
 
 func main() {
 	in := ReadFromInput()
