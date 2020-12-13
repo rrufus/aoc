@@ -68,6 +68,10 @@ func Part2(buses []*Bus) int {
 // results in another with the combined properties of the first
 func FoldPair(memo, new *Bus) (m *Bus) {
 
+	// actually, since all of the puzzle input 'RepeatsEvery's are prime,
+	// the LCM calculation isn't required and can be replaced with
+	// memo.RepeatsEvery * new.RepeatsEvery
+	// However now I have tests covering this case sooo...
 	repeatsEvery := LCM(memo.RepeatsEvery, new.RepeatsEvery)
 
 	for i := 0; true; i++ {
