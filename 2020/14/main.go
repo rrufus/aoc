@@ -1,10 +1,9 @@
 package main
 
 import (
-	"bufio"
 	"fmt"
 	"io/ioutil"
-	"os"
+	"math"
 	"regexp"
 	"strconv"
 	"strings"
@@ -14,94 +13,94 @@ var getValues = regexp.MustCompile(`(\d+)] = (\d+)`)
 
 func main() {
 	in := ReadFromInput()
-	// in := ReadFromStdIn()
 
-	// What is the sum of all values left in memory after it completes?
 	fmt.Println("Part 1")
-	mask := map[int]int{}
-	registerToValue := map[int]uint64{}
+	fmt.Println(Solve(in, false))
+	fmt.Println("Part 2")
+	fmt.Println(Solve(in, true))
+}
+
+func Solve(in []string, part2 bool) int64 {
+	mask := map[int]string{}
+	registerToValue := map[uint64]int64{}
 	for _, line := range in {
 		if strings.Contains(line, "mask") {
-			mask = map[int]int{}
+			mask = map[int]string{}
 			maskStr := strings.Split(line, " = ")[1]
 			for idx, character := range maskStr {
 				switch character {
 				case 'X':
+					if part2 {
+						mask[idx] = "X"
+					}
 					continue
 				case '0':
-					mask[idx] = 0
+					if !part2 {
+						mask[idx] = "0"
+					}
 				case '1':
-					mask[idx] = 1
+					mask[idx] = "1"
 				}
 			}
 		} else {
 			values := getValues.FindStringSubmatch(line)[1:]
-			register, _ := strconv.Atoi(values[0])
+			rawRegister, _ := strconv.ParseUint(values[0], 10, 64)
 			rawValue, _ := strconv.ParseInt(values[1], 10, 64)
 			rawBinary := strconv.FormatInt(rawValue, 2)
+			if part2 {
+				rawBinary = strconv.FormatUint(rawRegister, 2)
+			}
 
-			thisValue := map[int]int{}
+			// copy mask in
+			thisValue := map[int]string{}
 			for idx, val := range mask {
 				thisValue[idx] = val
 			}
 
+			// go over binary
 			for idx, val := range rawBinary {
 				realIdx := idx + 36 - len(rawBinary)
 				if _, exists := thisValue[realIdx]; !exists {
-					switch val {
-					case '0':
-						thisValue[realIdx] = 0
-					case '1':
-						thisValue[realIdx] = 1
-					}
+					thisValue[realIdx] = string(val)
 				}
 			}
-			fullBinary := ""
+
+			result := ""
 			for i := 0; i < 36; i++ {
-				setVal := thisValue[i]
-				fullBinary = fmt.Sprintf("%v%v", fullBinary, setVal)
+				setVal, exists := thisValue[i]
+				if exists {
+					result += setVal
+				} else {
+					result += "0"
+				}
 			}
-			decValue, _ := strconv.ParseUint(fullBinary, 2, 64)
-			registerToValue[register] = decValue
+
+			if !part2 {
+				decValue, _ := strconv.ParseInt(result, 2, 64)
+				registerToValue[rawRegister] = decValue
+
+			} else {
+				nFloating := strings.Count(result, "X")
+				combinations := math.Pow(2, float64(nFloating))
+				for i := 0; i < int(combinations); i++ {
+					inBinary := fmt.Sprintf("%0*v", nFloating, strconv.FormatInt(int64(i), 2))
+
+					register := result
+					for _, val := range inBinary {
+						register = strings.Replace(register, "X", string(val), 1)
+					}
+					n, _ := strconv.ParseUint(register, 2, 64)
+
+					registerToValue[n] = rawValue
+				}
+			}
 		}
 	}
-	total := uint64(0)
+	total := int64(0)
 	for _, val := range registerToValue {
 		total += val
 	}
-	fmt.Println(total)
-
-	fmt.Println("Part 2")
-
-}
-
-// func Parse(in []string) []*Program {
-
-// }
-
-func ReadFromStdIn() []string {
-	lines := []string{}
-	reader := bufio.NewReader(os.Stdin)
-
-read_loop:
-	for {
-		text, _ := reader.ReadString('\n')
-		if text == "\n" {
-			break read_loop
-		}
-		lines = append(lines, strings.TrimSpace(text))
-	}
-
-	return lines
-}
-
-func StringsToInts(stringInputs []string) []int {
-	ints := []int{}
-	for _, str := range stringInputs {
-		i, _ := strconv.Atoi(str)
-		ints = append(ints, i)
-	}
-	return ints
+	return total
 }
 
 func ReadFromInput() []string {
