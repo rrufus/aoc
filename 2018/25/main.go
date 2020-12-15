@@ -1,15 +1,11 @@
 package main
 
 import (
-	"bufio"
 	"fmt"
 	"io/ioutil"
-	"os"
 	"strconv"
 	"strings"
 )
-
-type Constellation map[*Point]bool
 
 type Coord struct {
 	W, X, Y, Z int
@@ -19,6 +15,8 @@ type Point struct {
 	Constellation *Constellation
 	Coord
 }
+
+type Constellation map[*Point]bool
 
 func abs(i int) int {
 	if i < 0 {
@@ -40,14 +38,10 @@ func NewPoint(w, x, y, z int) *Point {
 
 func main() {
 	in := ReadFromInput()
-	// in := ReadFromStdIn()
 
-	fmt.Println("Part 1")
+	fmt.Println("Part 1 (and only)")
 
-	fmt.Println(CountConstellations(in)) // 437 too high
-
-	fmt.Println("Part 2")
-
+	fmt.Println(CountConstellations(in))
 }
 
 func CountConstellations(in []string) int {
@@ -82,29 +76,8 @@ func CountConstellations(in []string) int {
 
 		points = append(points, point)
 	}
-	// for k, _ := range constellationMaps {
-	// 	fmt.Println("Linked:")
-	// 	for coord, _ := range *k {
-	// 		fmt.Printf("%+v\n", coord)
-	// 	}
-	// }
+
 	return len(constellationMaps)
-}
-
-func ReadFromStdIn() []string {
-	lines := []string{}
-	reader := bufio.NewReader(os.Stdin)
-
-read_loop:
-	for {
-		text, _ := reader.ReadString('\n')
-		if text == "\n" {
-			break read_loop
-		}
-		lines = append(lines, strings.TrimSpace(text))
-	}
-
-	return lines
 }
 
 func StringsToInts(stringInputs []string) []int {
