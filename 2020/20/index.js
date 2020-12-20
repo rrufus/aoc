@@ -113,7 +113,7 @@ Tile 3079:
 
 const reverse = (str = "") => str.split("").reverse().join("");
 
-const tiles = sample
+const tiles = input
   .trim()
   .split("\n\n")
   .map((tile) => {
@@ -141,16 +141,16 @@ const tiles = sample
     };
   });
 
-const result = tiles.reduce((memo, tile) => {
-  const adjacent = tiles
-    .filter((t) => t.id !== tile.id)
-    .reduce(
-      (sum, t) =>
-        t.borders.some((b) => tile.borders.includes(b)) ? sum + 1 : sum,
-      0
-    );
+console.log({
+  part1: tiles.reduce((memo, tile) => {
+    const adjacent = tiles
+      .filter((t) => t.id !== tile.id)
+      .reduce(
+        (sum, t) =>
+          t.borders.some((b) => tile.borders.includes(b)) ? sum + 1 : sum,
+        0
+      );
 
-  return adjacent === 2 ? memo * tile.id : memo;
-}, 1);
-
-console.log({ result });
+    return adjacent === 2 ? memo * tile.id : memo;
+  }, 1),
+});
