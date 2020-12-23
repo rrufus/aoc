@@ -44,6 +44,18 @@ func StringsToInts(stringInputs []string) []int {
 	return ints
 }
 
+func SliceEqual(s1, s2 []interface{}) bool {
+	if len(s1) != len(s2) {
+		return false
+	}
+	for idx, item := range s1 {
+		if s2[idx] != item {
+			return false
+		}
+	}
+	return true
+}
+
 func ReadFromInput() []string {
 	bytes, _ := ioutil.ReadFile("input")
 	return strings.Split(strings.TrimSpace(string(bytes)), "\n")
