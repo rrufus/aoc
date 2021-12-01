@@ -1,6 +1,6 @@
 #!/bin/bash
 
-YEAR=${2:-2020}
+YEAR=${2:-2021}
 DAY=$1
 SESSION=$(grep SESSION .env | cut -d '=' -f2)
 

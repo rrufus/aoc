@@ -273,7 +273,6 @@ imageVariations.find((v) => {
     }
   }
   if (nSeaMonsters > 0) {
-    // console.log(v);
     console.log("Part 2:", imagePixels - seaMonsterPixels * nSeaMonsters);
     return true;
   }
