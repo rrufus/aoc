@@ -3,7 +3,6 @@ package main
 import (
 	"bufio"
 	"fmt"
-	"io/ioutil"
 	"os"
 	"strconv"
 	"strings"
@@ -57,6 +56,6 @@ func SliceEqual(s1, s2 []interface{}) bool {
 }
 
 func ReadFromInput() []string {
-	bytes, _ := ioutil.ReadFile("input")
+	bytes, _ := os.ReadFile("input")
 	return strings.Split(strings.TrimSpace(string(bytes)), "\n")
 }
